@@ -77,7 +77,6 @@
 
 		<script>
 			function  playSound(e){
-				console.log(e)
 				const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
 				const container = document.querySelector(`.container[data-key="${e.keyCode}"]`);
 				if(!audio) return; // stop function from running
@@ -86,30 +85,24 @@
 				container.classList.add("playing");
 			}
 			function  playSoundClick(e){
-				console.log(e);
 				let paths = e.path;
 				paths.forEach(path => {
-					
-					if(path.className === "container")
-					{
-
-						const audio = document.querySelector(`audio[data-key="${path.dataset.key}"]`);
-						const container = document.querySelector(`.container[data-key="${path.dataset.key}"]`);
-						if(!audio) return; // stop function from running
-						audio.currentTime = 0;
-						audio.play();
-						container.classList.add("playing");
-					}
-				})
+					if(path.className !== "container") return;
+					const audio = document.querySelector(`audio[data-key="${path.dataset.key}"]`);
+					const container = document.querySelector(`.container[data-key="${path.dataset.key}"]`);
+					if(!audio) return; // stop function from running
+					audio.currentTime = 0;
+					audio.play();
+					container.classList.add("playing");
+				});
 			}
 			function removeTransition(e){
-				console.log(e.propertyName);
 				if(e.propertyName !== 'transform') return; // skip if its not a transform
 				this.classList.remove('playing');
 			};
 			const containers = document.querySelectorAll('.container');
-			containers.forEach(container => container.addEventListener("click", playSoundClick));
 			containers.forEach(container => container.addEventListener("transitionend", removeTransition));
+			containers.forEach(container => container.addEventListener("click", playSoundClick));
 			window.addEventListener('keydown',playSound);
 
 		</script>
